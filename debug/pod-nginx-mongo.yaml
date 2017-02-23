@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: www-pod
+  namespace: mrp
+spec:
+  containers:
+    - name: nginx-container
+      image: nginx
+      ports:
+      - containerPort: 80
+    - name: mongo-container
+      image: mongo
+    - name: busy
+      image: busybox
+      command: 
+        - "/bin/tail"
+        - "-f"
+        - "/proc/cpuinfo"
+      
+

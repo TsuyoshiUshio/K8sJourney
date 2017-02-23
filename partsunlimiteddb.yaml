@@ -1,0 +1,45 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "mongo"
+  namespace: mrp
+  labels:
+    app: "mongo"
+spec:
+  ports:
+    - port: 27017
+      name: mongo-api
+    - port: 28017
+      name: mongo-web
+  selector:
+    app: "mongo"
+  clusterIP: None
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata: 
+  name: "mongo"
+  namespace: mrp
+  labels:
+    app: "mongo"
+spec:
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: "mongo"
+        tier: "mongo"
+    spec:
+      containers:
+      - name: "mongo"
+        image: index.docker.io/tsuyoshiushio/pudb:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 27017
+          name: mongo-api
+        - containerPort: 28017
+          name: mongo-web
+      imagePullSecrets:
+      - name: mydockerhubkey

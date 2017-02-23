@@ -1,0 +1,43 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: "order"
+  namespace: mrp
+  labels:
+    app: "order"
+spec:
+  selector: 
+    app: "order"
+  type: LoadBalancer
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+    name: http
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: "order"
+  namespace: mrp
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: "order"
+    spec:
+      containers:
+      - name: "order"
+        env:
+          - name: MONGO_PORT
+            value: tcp://mongo:27017
+        image: index.docker.io/tsuyoshiushio/puorder:${BUILD_BUILDID}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+      imagePullSecrets:
+        - name: mydockerhubkey

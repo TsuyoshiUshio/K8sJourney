@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mongoclient 
+  namespace: mrp
+spec:
+  containers:
+    - name: mongoclient
+      image: mongo
